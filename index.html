@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Shopping Demo - Gaussian Splatting</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- PlayCanvas Engine v2.13.1 - Latest release with SOG WebGL2 support -->
+    <script async loading="async" src="https://code.playcanvas.com/playcanvas-2.13.1.min.js"></script>
+    <!-- Debug utilities and error handling -->
+    <script>
+        // Track when PlayCanvas loads
+        window.playcanvasLoaded = false;
+        window.addEventListener('load', () => {
+            if (typeof pc !== 'undefined') {
+                window.playcanvasLoaded = true;
+                console.log('✅ PlayCanvas library loaded successfully');
+                console.log('PlayCanvas version:', pc.VERSION);
+            }
+        });
+
+        // Suppress specific errors that we can't avoid
+        window.addEventListener('error', (event) => {
+            if (event.message && event.message.includes('Failed to fetch dynamically imported module')) {
+                console.warn('⚠️ Suppressing dynamic import error (expected in some versions)');
+                // Returning true suppresses the error from being logged as unhandled
+                return true;
+            }
+        }, true);
+
+        // Also handle promise rejections from dynamic imports
+        window.addEventListener('unhandledrejection', (event) => {
+            if (event.reason && event.reason.message &&
+                event.reason.message.includes('Failed to fetch dynamically imported module')) {
+                console.warn('⚠️ Suppressing dynamic import promise rejection');
+                event.preventDefault();
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛍️ 3D Shopping Experience</h1>
+            <p class="subtitle">Explore products with Gaussian Splatting Technology</p>
+        </header>
+
+        <div class="main-layout">
+            <!-- Product Grid -->
+            <div id="product-list" class="product-grid">
+                <!-- Products will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <!-- Modal for 3D Viewer -->
+        <div id="viewer-modal" class="viewer-modal hidden">
+            <div class="modal-content">
+                <button class="close-modal" id="close-modal">✕</button>
+                <div class="viewer-header">
+                    <h2 id="product-title">Product Viewer</h2>
+                    <p id="product-description">Loading...</p>
+                    <div class="viewer-info">
+                        <span class="tech-badge">🎮 WebGPU</span>
+                        <span class="tech-badge">✨ Gaussian Splatting</span>
+                        <span class="tech-badge">📦 SOG Format</span>
+                    </div>
+                </div>
+                <div id="viewer-canvas-container">
+                    <canvas id="application-canvas"></canvas>
+                    <div id="loading-indicator" class="loading-indicator hidden">
+                        <div class="spinner"></div>
+                        <p>Loading 3D Model...</p>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button id="reset-camera" class="btn">🔄 Reset View</button>
+                    <div class="control-hints">
+                        <span>🖱️ Left Click + Drag to Rotate</span>
+                        <span>🖱️ Right Click + Drag to Pan</span>
+                        <span>🖱️ Scroll to Zoom</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Powered by <a href="https://playcanvas.com/" target="_blank">PlayCanvas</a> |
+               Using <a href="https://blog.playcanvas.com/playcanvas-open-sources-sog-format-for-gaussian-splatting/" target="_blank">SOG Format</a></p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

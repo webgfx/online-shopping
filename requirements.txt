@@ -1,0 +1,1 @@
+1. Always use PlayCanvas for Gaussian Splatting since it offers the best SOG/Gaussian Splat support.
