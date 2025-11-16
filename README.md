@@ -5,7 +5,8 @@ An innovative online shopping demo that showcases products using **Gaussian Spla
 ## 🌟 Features
 
 - **Cutting-edge 3D Visualization**: Display products using Gaussian Splatting technology
-- **SOG Format Support**: Utilizes PlayCanvas's open-source SOG (Spatially Ordered Gaussians) format for efficient compression
+- **Multiple Format Support**: Load Gaussian Splats in `.sog` (compressed), `.splat` (standard), or `.ply` (raw) formats
+- **SOG Format Optimization**: Utilizes PlayCanvas's open-source SOG (Spatially Ordered Gaussians) format for efficient compression
 - **Modern Graphics**: Leverages WebGPU (preferred) or WebGL2 (fallback) for high-performance rendering
 - **Interactive 3D Viewer**:
   - Rotate products with left-click and drag
@@ -167,24 +168,32 @@ If you only have a triangle mesh, you'll need to run a photogrammetry→Gaussian
 
 ### Step 2: Add Products to Catalog
 
-Edit `app.js` and add your product to the `products` array:
+Edit `app.js` and add your product to the `products` array. **New products are automatically displayed first** (the array is rendered in reverse order), so simply append new products at the end with incrementing IDs:
 
 ```javascript
 {
-    id: 7,
+    id: 23,  // Just increment from the last ID
     name: "Your Product",
     icon: "🎁",
     description: "Product description",
     price: "$XX.XX",
     category: "toys", // or "beverages"
-    sogFile: "assets/your-product.sog",
-    status: "available" // or "sample"
+    sogFile: "assets/your-product.sog",  // or .splat, .ply
+    status: "available",  // or "sample"
+    dateAdded: "2025-11-16"  // Optional: adds "NEW" badge
 }
 ```
 
-### Step 3: Place SOG Files
+The viewer displays products in **reverse ID order**, so higher IDs appear first. This means you never need to renumber existing products when adding new ones!
 
-Create an `assets/` folder in the project root and place your `.sog` files there.
+### Step 3: Place Gaussian Splat Files
+
+Create an `assets/` folder in the project root and place your Gaussian Splat files there. Supported formats:
+- **`.sog`** - Compressed SOG format (recommended, ~95% smaller than PLY)
+- **`.splat`** - Standard Gaussian Splat format
+- **`.ply`** - Raw PLY format (Gaussian Splat point clouds only)
+
+The viewer automatically detects the format based on file extension.
 
 ## 🎮 Using the Demo
 
@@ -206,6 +215,14 @@ Create an `assets/` folder in the project root and place your `.sog` files there
 - **JavaScript**: Application logic
 - **HTML5/CSS3**: User interface
 
+### Supported File Formats
+
+| Format | Description | File Size | Best For |
+|--------|-------------|-----------|----------|
+| `.sog` | SOG (Spatially Ordered Gaussians) - Compressed format | ~5% of PLY | Production (recommended) |
+| `.splat` | Standard Gaussian Splat format | ~50% of PLY | Balanced size/quality |
+| `.ply` | Raw Gaussian Splat point cloud | 100% (largest) | Development/testing |
+
 ### SOG Format Benefits
 
 - **📦 Convenient**: Single `.sog` file format
@@ -213,6 +230,7 @@ Create an `assets/` folder in the project root and place your `.sog` files there
 - **🗜️ High Compression**: ~95% file size reduction compared to PLY
 - **🎯 Precision**: Minimized compression artifacts
 - **🌐 Cross-platform**: Works anywhere WebGPU or WebGL2 is supported
+- **🔄 Auto-detection**: Viewer automatically recognizes .sog, .splat, and .ply formats
 
 ### Browser Compatibility
 
@@ -302,3 +320,6 @@ For questions about:
 ---
 
 **Built with ❤️ using PlayCanvas**
+
+# Resources
+https://huggingface.co/VladKobranov/splats/tree/main

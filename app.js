@@ -1,6 +1,7 @@
 // PlayCanvas 3D Gaussian Splat Viewer - WebGPU with WebGL2 fallback
 // Uses latest stable PlayCanvas with proper SOG format support for both backends
 // Dynamically creates products with Gaussian Splatting models
+// Supported file formats: .sog (compressed), .splat (standard), .ply (raw)
 const products = [
     {
         id: 0,
@@ -10,7 +11,7 @@ const products = [
         price: "$129,000",
         category: "vehicles",
         sogFile: "assets/car.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 1,
@@ -20,7 +21,7 @@ const products = [
         price: "$12.99",
         category: "food",
         sogFile: "assets/nezuko-burger.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 2,
@@ -30,7 +31,7 @@ const products = [
         price: "$24.99",
         category: "food",
         sogFile: "assets/birthday-cake.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 3,
@@ -40,7 +41,7 @@ const products = [
         price: "$34.99",
         category: "toys",
         sogFile: "assets/building-blocks.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 4,
@@ -50,7 +51,7 @@ const products = [
         price: "$4.99",
         category: "beverages",
         sogFile: "assets/orange-juice.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 5,
@@ -60,7 +61,7 @@ const products = [
         price: "$2.99",
         category: "beverages",
         sogFile: "assets/cola-bottle.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 6,
@@ -70,7 +71,7 @@ const products = [
         price: "$5.99",
         category: "beverages",
         sogFile: "assets/coffee-cup.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 7,
@@ -80,7 +81,7 @@ const products = [
         price: "$24.99",
         category: "toys",
         sogFile: "assets/race-car.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 8,
@@ -90,7 +91,7 @@ const products = [
         price: "$18.99",
         category: "toys",
         sogFile: "assets/dinosaur.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 9,
@@ -100,7 +101,7 @@ const products = [
         price: "$14.99",
         category: "toys",
         sogFile: "assets/puzzle-set.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 10,
@@ -110,7 +111,7 @@ const products = [
         price: "$6.99",
         category: "beverages",
         sogFile: "assets/green-tea.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 11,
@@ -120,7 +121,7 @@ const products = [
         price: "$7.99",
         category: "beverages",
         sogFile: "assets/smoothie.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 12,
@@ -130,7 +131,7 @@ const products = [
         price: "$3.99",
         category: "beverages",
         sogFile: "assets/energy-drink.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 13,
@@ -140,7 +141,7 @@ const products = [
         price: "$22.99",
         category: "toys",
         sogFile: "assets/action-figure.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 14,
@@ -150,7 +151,7 @@ const products = [
         price: "$49.99",
         category: "toys",
         sogFile: "assets/doll-house.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 15,
@@ -160,7 +161,7 @@ const products = [
         price: "$1.99",
         category: "beverages",
         sogFile: "assets/water-bottle.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 16,
@@ -170,7 +171,7 @@ const products = [
         price: "$29.99",
         category: "toys",
         sogFile: "assets/robot-toy.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 17,
@@ -180,7 +181,7 @@ const products = [
         price: "$19.99",
         category: "toys",
         sogFile: "assets/teddy-bear.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 18,
@@ -190,7 +191,7 @@ const products = [
         price: "$18.99",
         category: "food",
         sogFile: "assets/chocolate-box.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 19,
@@ -200,7 +201,7 @@ const products = [
         price: "$4.99",
         category: "food",
         sogFile: "assets/pizza-slice.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 20,
@@ -210,7 +211,7 @@ const products = [
         price: "$3.99",
         category: "food",
         sogFile: "assets/ice-cream.sog",
-        status: "available"
+        status: "out-of-stock"
     },
     {
         id: 21,
@@ -220,7 +221,29 @@ const products = [
         price: "$16.99",
         category: "food",
         sogFile: "assets/sushi-set.sog",
-        status: "available"
+        status: "out-of-stock"
+    },
+    {
+        id: 23,
+        name: "Mountain Bicycle",
+        icon: "🚴",
+        description: "High-performance mountain bike with suspension",
+        price: "$1,299",
+        category: "vehicles",
+        sogFile: "assets/bicycle.ply",  // Convert .splat to .ply for PlayCanvas compatibility
+        status: "available",
+        dateAdded: "2025-11-16"
+    },
+    {
+        id: 24,
+        name: "3 Kanzashi",
+        icon: "🎎",
+        description: "Traditional Japanese hair ornament with three decorative elements",
+        price: "$89.99",
+        category: "accessories",
+        sogFile: "assets/3kanzashi.ply",
+        status: "available",
+        dateAdded: "2025-11-16"
     }
 ];
 
@@ -502,10 +525,8 @@ function addOrbitCamera(cameraEntity) {
         } else if (isPanning) {
             const dx = event.x - lastX;
             const dy = event.y - lastY;
-            const right = new pc.Vec3();
-            const up = new pc.Vec3();
-            cameraEntity.getRight(right);
-            cameraEntity.getUp(up);
+            const right = cameraEntity.right.clone();
+            const up = cameraEntity.up.clone();
             right.mulScalar(-dx * 0.01);
             up.mulScalar(dy * 0.01);
             orbitCamera.target.add(right);
@@ -534,8 +555,8 @@ function addOrbitCamera(cameraEntity) {
     cameraScript = orbitCamera;
 }
 
-// Load SOG file (Gaussian Splat)
-function loadSOGFile(sogPath, productName) {
+// Load Gaussian Splat file (supports .sog, .splat, .ply formats)
+function loadSOGFile(filePath, productName) {
     // Check if app is initialized
     if (!app) {
         console.error('PlayCanvas app not initialized yet');
@@ -551,17 +572,33 @@ function loadSOGFile(sogPath, productName) {
         currentEntity = null;
     }
 
-    // Validate sogPath
-    if (!sogPath) {
-        console.error('Invalid SOG path');
+    // Validate filePath
+    if (!filePath) {
+        console.error('Invalid file path');
+        showDemoPlaceholder(productName);
+        return;
+    }
+
+    // Detect file format from extension
+    const fileExt = filePath.split('.').pop().toLowerCase();
+    const supportedFormats = ['sog', 'splat', 'ply'];
+
+    if (!supportedFormats.includes(fileExt)) {
+        console.error(`Unsupported file format: .${fileExt}. Supported formats: ${supportedFormats.join(', ')}`);
         showDemoPlaceholder(productName);
         return;
     }
 
     // Check if this is a remote URL or local file
-    const isRemoteUrl = sogPath.startsWith('http://') || sogPath.startsWith('https://');
-    console.log(`Loading ${isRemoteUrl ? 'remote' : 'local'} SOG file: ${sogPath}`);
-    console.warn('⚠️ Large SOG files (>5MB) may cause browser performance issues or loading errors');
+    const isRemoteUrl = filePath.startsWith('http://') || filePath.startsWith('https://');
+    console.log(`Loading ${isRemoteUrl ? 'remote' : 'local'} Gaussian Splat (.${fileExt}): ${filePath}`);
+
+    if (fileExt === 'sog' || fileExt === 'ply') {
+        const fileSizeMB = filePath.includes('car') ? 15 : 0;
+        if (fileSizeMB > 5) {
+            console.warn('⚠️ Large files (>5MB) may cause browser performance issues or loading errors');
+        }
+    }
 
     // Create a new entity for the Gaussian Splat
     const entity = new pc.Entity(productName);
@@ -571,10 +608,11 @@ function loadSOGFile(sogPath, productName) {
         if (pc.GSplatComponent) {
             entity.addComponent('gsplat');
 
-            // Load the SOG asset from URL or relative path
-            app.assets.loadFromUrl(sogPath, 'gsplat', (err, asset) => {
+            // Load the asset from URL or relative path
+            // PlayCanvas auto-detects format based on file extension
+            app.assets.loadFromUrl(filePath, 'gsplat', (err, asset) => {
                 if (err) {
-                    console.error(`Failed to load SOG from URL: ${sogPath}`, err);
+                    console.error(`Failed to load Gaussian Splat (.${fileExt}) from: ${filePath}`, err);
                     showDemoPlaceholder(productName);
                     return;
                 }
@@ -590,7 +628,7 @@ function loadSOGFile(sogPath, productName) {
                 }
 
                 showLoading(false);
-                console.log(`Successfully loaded Gaussian Splat: ${productName}`);
+                console.log(`✅ Successfully loaded ${fileExt.toUpperCase()} Gaussian Splat: ${productName}`);
             });
         } else {
             // Fallback: GSplat component not available
@@ -683,22 +721,31 @@ function updateProductInfo(product) {
         `${product.description} - ${product.price}`;
 }
 
-// Render products in grid
+// Render products in grid (reversed order - newest first)
 function renderProducts() {
     const productList = document.getElementById('product-list');
 
-    products.forEach(product => {
+    // Reverse the array to show newest products (highest ID) first
+    const sortedProducts = [...products].reverse();
+
+    sortedProducts.forEach(product => {
         const card = document.createElement('div');
         card.className = 'product-card';
         card.dataset.productId = product.id;
 
+        // Add "NEW" badge and date if product was added recently (has dateAdded)
+        const isNew = product.dateAdded ? true : false;
+        const newBadge = isNew ? '<span class="new-badge">NEW</span>' : '';
+        const dateAddedText = product.dateAdded ? `<p class="date-added">Added: ${product.dateAdded}</p>` : '';
+
         card.innerHTML = `
             <span class="product-icon">${product.icon}</span>
-            <h3>${product.name}</h3>
+            <h3>${product.name}${newBadge}</h3>
             <p>${product.description}</p>
             <p class="product-price">${product.price}</p>
+            ${dateAddedText}
             <span class="product-status status-${product.status}">
-                ${product.status === 'sample' ? '📦 Demo' : '✅ Available'}
+                ${product.status === 'sample' ? '📦 Demo' : product.status === 'out-of-stock' ? '❌ Out of Stock' : '✅ Available'}
             </span>
         `;
 
